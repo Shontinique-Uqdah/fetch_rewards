@@ -1,32 +1,9 @@
-//
-//  ContentView.swift
-//  Fetch Recipes
-//
-//  Created by Shontinique Uqdah on 6/29/24.
-//
-
 import SwiftUI
-
-struct Wrapper: Codable {
-    let meals: [Recipe]
-}
-
-struct Recipe: Codable, Identifiable {
-    let idMeal: String
-    let strMeal: String
-    let strCategory: String?
-    let strInstructions: String?
-    let strArea: String?
-    let strMealThumb: String?
-    
-    var id: String {
-            idMeal
-        }
-}
 
 struct ContentView: View {
     @State private var recipes: [Recipe] = []
     @State private var errorMessage: String?
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -37,10 +14,18 @@ struct ContentView: View {
                     Text("No data available")
                 } else {
                     List(recipes) { recipe in
-                        NavigationLink(destination: DetailedRecipeView(recipe: recipe)){
+                        NavigationLink(destination: DetailedRecipeView(recipeID: recipe.idMeal)) {
                             VStack(alignment: .leading) {
                                 Text(recipe.strMeal)
                                     .font(.title)
+                                if let previewImage = recipe.strMealThumb {
+                                    AsyncImage(url: URL(string: previewImage + "/preview")){ image in
+                                        image.resizable()
+                                            .aspectRatio(contentMode: .fit) // or .fill
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                }
                             }
                         }
                     }
@@ -53,45 +38,17 @@ struct ContentView: View {
             }
         }
     }
-    
+
     func loadRecipes() async {
-            do {
-                recipes = try await performAPICall()
-            } catch {
-                errorMessage = "Failed to load recipes: \(error.localizedDescription)"
-            }
+        do {
+            recipes = try await RecipeService.shared.fetchRecipes()
+        } catch {
+            errorMessage = "Failed to load recipes: \(error.localizedDescription)"
         }
-    
-    func performAPICall() async throws -> [Recipe] {
-            let url = URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Dessert")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let wrapper = try JSONDecoder().decode(Wrapper.self, from: data)
-            
-            var detailedRecipes: [Recipe] = []
-            for recipe in wrapper.meals {
-                if let detailedRecipe = try? await fetchRecipeDetails(id: recipe.idMeal) {
-                    detailedRecipes.append(detailedRecipe)
-                }
-            }
-            return detailedRecipes
-        }
-        
-        func fetchRecipeDetails(id: String) async throws -> Recipe {
-            let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(id)")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let wrapper = try JSONDecoder().decode(Wrapper.self, from: data)
-            return wrapper.meals[0]
-        }
-        /*
-        func performAPICall() async throws -> [Recipe] {
-            let url = URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Dessert")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let wrapper = try JSONDecoder().decode(Wrapper.self, from: data)
-            return wrapper.meals
-        }
-         */
     }
+}
 
 #Preview {
     ContentView()
 }
+
