@@ -19,7 +19,7 @@ struct ContentView: View {
                                 Text(recipe.strMeal)
                                     .font(.title)
                                 if let previewImage = recipe.strMealThumb {
-                                    AsyncImage(url: URL(string: previewImage + "/preview")){ image in
+                                    AsyncImage(url: URL(string: previewImage)){ image in
                                         image.resizable()
                                             .aspectRatio(contentMode: .fit) // or .fill
                                     } placeholder: {

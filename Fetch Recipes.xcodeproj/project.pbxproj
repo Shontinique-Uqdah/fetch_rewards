@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		D9ACDDAC2C3847A700816CF6 /* RecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ACDDAB2C3847A700816CF6 /* RecipeService.swift */; };
+		D9ACDDAE2C38601F00816CF6 /* RecipeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ACDDAD2C38601F00816CF6 /* RecipeServiceTests.swift */; };
+		D9ACDDB02C3862D700816CF6 /* ContentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ACDDAF2C3862D700816CF6 /* ContentViewTests.swift */; };
+		D9ACDDB22C38639300816CF6 /* DetailedRecipeViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9ACDDB12C38639300816CF6 /* DetailedRecipeViewTests.swift */; };
 		D9C060092C30A0DC008227A7 /* Fetch_RecipesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C060082C30A0DC008227A7 /* Fetch_RecipesApp.swift */; };
 		D9C0600B2C30A0DC008227A7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0600A2C30A0DC008227A7 /* ContentView.swift */; };
 		D9C0600D2C30A0DE008227A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9C0600C2C30A0DE008227A7 /* Assets.xcassets */; };
@@ -37,6 +40,9 @@
 
 /* Begin PBXFileReference section */
 		D9ACDDAB2C3847A700816CF6 /* RecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeService.swift; sourceTree = "<group>"; };
+		D9ACDDAD2C38601F00816CF6 /* RecipeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeServiceTests.swift; sourceTree = "<group>"; };
+		D9ACDDAF2C3862D700816CF6 /* ContentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewTests.swift; sourceTree = "<group>"; };
+		D9ACDDB12C38639300816CF6 /* DetailedRecipeViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedRecipeViewTests.swift; sourceTree = "<group>"; };
 		D9C060052C30A0DC008227A7 /* Fetch Recipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fetch Recipes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C060082C30A0DC008227A7 /* Fetch_RecipesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fetch_RecipesApp.swift; sourceTree = "<group>"; };
 		D9C0600A2C30A0DC008227A7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -120,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				D9C060192C30A0DE008227A7 /* Fetch_RecipesTests.swift */,
+				D9ACDDAD2C38601F00816CF6 /* RecipeServiceTests.swift */,
 			);
 			path = "Fetch RecipesTests";
 			sourceTree = "<group>";
@@ -129,6 +136,8 @@
 			children = (
 				D9C060232C30A0DE008227A7 /* Fetch_RecipesUITests.swift */,
 				D9C060252C30A0DE008227A7 /* Fetch_RecipesUITestsLaunchTests.swift */,
+				D9ACDDAF2C3862D700816CF6 /* ContentViewTests.swift */,
+				D9ACDDB12C38639300816CF6 /* DetailedRecipeViewTests.swift */,
 			);
 			path = "Fetch RecipesUITests";
 			sourceTree = "<group>";
@@ -299,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9C0601A2C30A0DE008227A7 /* Fetch_RecipesTests.swift in Sources */,
+				D9ACDDAE2C38601F00816CF6 /* RecipeServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,7 +316,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9ACDDB02C3862D700816CF6 /* ContentViewTests.swift in Sources */,
 				D9C060242C30A0DE008227A7 /* Fetch_RecipesUITests.swift in Sources */,
+				D9ACDDB22C38639300816CF6 /* DetailedRecipeViewTests.swift in Sources */,
 				D9C060262C30A0DE008227A7 /* Fetch_RecipesUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -457,6 +469,7 @@
 				DEVELOPMENT_TEAM = 829GVQ379C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -486,6 +499,7 @@
 				DEVELOPMENT_TEAM = 829GVQ379C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

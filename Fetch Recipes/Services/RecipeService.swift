@@ -5,12 +5,14 @@
 //  Created by Shontinique Uqdah on 7/5/24.
 //
 
+// Layer for handling REST API calls
 import Foundation
 
 struct Wrapper: Codable {
     let meals: [Recipe]
 }
 
+// Struct for deserializing the JSON format of the RESTful API calls
 struct Recipe: Codable, Identifiable {
     let idMeal: String
     let strMeal: String
@@ -65,11 +67,22 @@ struct Recipe: Codable, Identifiable {
     }
 }
 
+// Makes the RecipeService Class testable by allowing dependency injection for URLSession
+protocol URLSessionProtocol {
+    func data(from url: URL) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: URLSessionProtocol {}
+
 class RecipeService {
     static let shared = RecipeService()
+    var urlSession: URLSessionProtocol
 
-    private init() {}
+    private init(session: URLSessionProtocol = URLSession.shared) {
+        self.urlSession = session
+    }
 
+    // Method to retrieve a list of all recipes in the category "Dessert"
     func fetchRecipes() async throws -> [Recipe] {
         let url = URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Dessert")!
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -78,6 +91,7 @@ class RecipeService {
         return wrapper.meals
     }
 
+    // Method to retrieve full details for a recipe given its ID
     func fetchRecipeDetails(id: String) async throws -> Recipe {
         let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(id)")!
         let (data, _) = try await URLSession.shared.data(from: url)
