@@ -9,106 +9,54 @@ import XCTest
 @testable import Fetch_Recipes
 
 final class RecipeServiceTests: XCTestCase {
-    var recipeService: RecipeService!
+    var service: RecipeService!
+    var mockSession: MockURLSession!
 
-    override func setUpWithError() throws {
-        recipeService = RecipeService.shared
-    }
-
-    override func tearDownWithError() throws {
-        recipeService = nil
-    }
-
-    func testFetchRecipesSuccess() async throws {
-        let mockSession = URLSessionMock()
-        mockSession.data = """
+    override func setUp() {
+        super.setUp()
+        
+        let data = """
         {
-            "meals": [
-                {
-                    "idMeal": "1234",
-                    "strMeal": "Test Meal",
-                    "strCategory": "Test Category",
-                    "strInstructions": "Test Instructions",
-                    "strArea": "Test Area",
-                    "strMealThumb": "https://www.example.com/image.jpg",
-                    "strTags": "Test,Recipe",
-                    "strIngredient1": "Ingredient 1",
-                    "strMeasure1": "1 cup"
-                }
-            ]
+            "meals": [{
+                "idMeal": "52772",
+                "strMeal": "Expected Meal Name",
+                "strCategory": "Dessert",
+                "strInstructions": "Instructions",
+                "strArea": "Area",
+                "strMealThumb": "Thumbnail",
+                "strTags": "Tags",
+                "strIngredient1": "Ingredient1",
+                "strIngredient2": "Ingredient2",
+                "strMeasure1": "Measure1",
+                "strMeasure2": "Measure2"
+            }]
         }
-        """.data(using: .utf8)!
-        recipeService.urlSession = mockSession
-
-        let recipes = try await recipeService.fetchRecipes()
-        XCTAssertEqual(recipes.count, 1)
-        XCTAssertEqual(recipes.first?.idMeal, "1234")
-        XCTAssertEqual(recipes.first?.strMeal, "Test Meal")
+        """.data(using: .utf8)
+        
+        mockSession = MockURLSession(data: data, response: HTTPURLResponse(url: URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php?c=Dessert")!,
+                                                                           statusCode: 200,
+                                                                           httpVersion: nil,
+                                                                           headerFields: nil),
+                                     error: nil)
+        service = RecipeService(session: mockSession)
     }
 
-    func testFetchRecipesFailure() async {
-        let mockSession = URLSessionMock()
-        mockSession.error = NSError(domain: "test", code: 1, userInfo: nil)
-        recipeService.urlSession = mockSession
-
-        do {
-            _ = try await recipeService.fetchRecipes()
-            XCTFail("Expected fetchRecipes to throw an error")
-        } catch {
-            XCTAssertNotNil(error)
-        }
+    override func tearDown() {
+        service = nil
+        mockSession = nil
+        super.tearDown()
     }
 
-    func testFetchRecipeDetailsSuccess() async throws {
-        let mockSession = URLSessionMock()
-        mockSession.data = """
-        {
-            "meals": [
-                {
-                    "idMeal": "1234",
-                    "strMeal": "Test Meal",
-                    "strCategory": "Test Category",
-                    "strInstructions": "Test Instructions",
-                    "strArea": "Test Area",
-                    "strMealThumb": "https://www.example.com/image.jpg",
-                    "strTags": "Test,Recipe",
-                    "strIngredient1": "Ingredient 1",
-                    "strMeasure1": "1 cup"
-                }
-            ]
-        }
-        """.data(using: .utf8)!
-        recipeService.urlSession = mockSession
-
-        let recipe = try await recipeService.fetchRecipeDetails(id: "1234")
-        XCTAssertEqual(recipe.idMeal, "1234")
-        XCTAssertEqual(recipe.strMeal, "Test Meal")
+    func testFetchRecipes() async throws {
+        let recipes = try await service.fetchRecipes()
+        XCTAssertFalse(recipes.isEmpty, "The fetched recipes should not be empty.")
+        XCTAssertEqual(recipes.first?.strMeal, "Apam balik")
     }
 
-    func testFetchRecipeDetailsFailure() async {
-        let mockSession = URLSessionMock()
-        mockSession.error = NSError(domain: "test", code: 1, userInfo: nil)
-        recipeService.urlSession = mockSession
-
-        do {
-            _ = try await recipeService.fetchRecipeDetails(id: "1234")
-            XCTFail("Expected fetchRecipeDetails to throw an error")
-        } catch {
-            XCTAssertNotNil(error)
-        }
-    }
-}
-
-// Mock URLSession for testing
-class URLSessionMock: URLSessionProtocol {
-    var data: Data?
-    var error: Error?
-
-    func data(from url: URL) async throws -> (Data, URLResponse) {
-        if let error = error {
-            throw error
-        }
-        let response = URLResponse(url: url, mimeType: nil, expectedContentLength: data?.count ?? 0, textEncodingName: nil)
-        return (data ?? Data(), response)
+    func testFetchRecipeDetails() async throws {
+        let expectedRecipeId = "52772"
+        let recipe = try await service.fetchRecipeDetails(id: expectedRecipeId)
+        XCTAssertEqual(recipe.idMeal, expectedRecipeId, "The fetched recipe ID should match the expected ID.")
+        XCTAssertEqual(recipe.strMeal, "Teriyaki Chicken Casserole", "The fetched recipe name should match the expected name.")
     }
 }

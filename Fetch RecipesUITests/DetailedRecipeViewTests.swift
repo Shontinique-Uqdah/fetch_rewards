@@ -4,106 +4,68 @@
 //
 //  Created by Shontinique Uqdah on 7/5/24.
 //
-
-/*
 import XCTest
 import SwiftUI
 @testable import Fetch_Recipes
 
-final class DetailedRecipeViewTests: XCTestCase {
+class DetailedRecipeViewTests: XCTestCase {
+
+    var sut: URLSession!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        try super.setUpWithError()
+        sut = URLSession(configuration: .default)
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut = nil
+        try super.tearDownWithError()
     }
+    
+// Testing to see whether we can load a recipe within 5 seconds
+    func testLoadMealDetailDataApiCallGetsHTTPStatusCode200() throws {
+        // Given "Apam balik" with id=53049, the first dessert alphabetically in the database
+        let urlString =
+            "https://themealdb.com/api/json/v1/1/lookup.php?i=53049"
+        let url = URL(string: urlString)!
+        
+        let promise = expectation(description: "Status code: 200")
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
+        let dataTask = sut.dataTask(with: url) { _, response, error in
+            if let error = error {
+                XCTFail("Error: \(error.localizedDescription)")
+                return
+            } else if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                if statusCode == 200 {
+                    promise.fulfill()
+                } else {
+                    XCTFail("Status code: \(statusCode)")
+                }
             }
         }
+        dataTask.resume()
+        wait(for: [promise], timeout: 5)
     }
-    
-    func testInitialState() {
-            let view = DetailedRecipeView(recipeID: "1")
-            XCTAssertNil(view.recipe)
-            XCTAssertNil(view.errorMessage)
-        }
-
-        func testLoadRecipeDetailsSuccess() async {
-            let view = DetailedRecipeView(recipeID: "1")
-            RecipeService.shared = MockRecipeService(shouldFail: false)
-            await view.loadRecipeDetails()
-            XCTAssertNotNil(view.recipe)
-            XCTAssertNil(view.errorMessage)
-        }
-
-        func testLoadRecipeDetailsFailure() async {
-            let view = DetailedRecipeView(recipeID: "1")
-            RecipeService.shared = MockRecipeService(shouldFail: true)
-            await view.loadRecipeDetails()
-            XCTAssertNil(view.recipe)
-            XCTAssertNotNil(view.errorMessage)
-        }
-}
-*/
-
-
-/*
-import XCTest
-@testable import Fetch_Recipes
-
-final class DetailedRecipeViewTests: XCTestCase {
-    
-    func testLoadRecipeDetails() async {
-        // Given
-        let recipeID = "52772"
+        
+        /*
+    func testDetailedRecipeView() throws {
+        // Create a mock service
         let mockService = MockRecipeService()
-        let viewModel = DetailedRecipeViewModel(recipeID: recipeID, recipeService: mockService)
-        let detailedRecipeView = DetailedRecipeView(recipeID: recipeID, viewModel: viewModel)
-        
-        // When
-        await viewModel.loadRecipeDetails()
-        
-        // Then
-        XCTAssertNotNil(viewModel.recipe, "Recipe should not be nil after loading.")
-        XCTAssertEqual(viewModel.recipe?.idMeal, recipeID, "Recipe ID should match the given ID.")
+
+        // Prepare test data for a specific recipe ID
+        let recipeID = "1"
+        let recipe = Recipe(idMeal: recipeID, strMeal: "Mock Recipe 1", strCategory: "Dessert", strInstructions: "Instructions 1", strArea: "Area 1", strMealThumb: "mockimage1", strTags: nil, strIngredient1: "Ingredient 1", strIngredient2: nil, strIngredient3: nil, strIngredient4: nil, strIngredient5: nil, strIngredient6: nil, strIngredient7: nil, strIngredient8: nil, strIngredient9: nil, strIngredient10: nil, strIngredient11: nil, strIngredient12: nil, strIngredient13: nil, strIngredient14: nil, strIngredient15: nil, strIngredient16: nil, strIngredient17: nil, strIngredient18: nil, strIngredient19: nil, strIngredient20: nil, strMeasure1: "Measure 1", strMeasure2: nil, strMeasure3: nil, strMeasure4: nil, strMeasure5: nil, strMeasure6: nil, strMeasure7: nil, strMeasure8: nil, strMeasure9: nil, strMeasure10: nil, strMeasure11: nil, strMeasure12: nil, strMeasure13: nil, strMeasure14: nil, strMeasure15: nil, strMeasure16: nil, strMeasure17: nil, strMeasure18: nil, strMeasure19: nil, strMeasure20: nil)
+
+        // Set up the DetailedRecipeView
+        let detailedRecipeView = DetailedRecipeView(recipeID: recipeID)
+            .environmentObject(mockService)
+
+        // Check if the DetailedRecipeView is properly rendering
+        XCTAssertNoThrow(try detailedRecipeView.loadRecipeDetails(), "Failed to load recipe details: \(detailedRecipeView.errorMessage ?? "Unknown Error")")
+
+        // Perform assertions on the view's rendered output
+        XCTAssertEqual(detailedRecipeView.recipe?.idMeal, recipeID, "Loaded recipe ID should match expected ID")
+        XCTAssertEqual(detailedRecipeView.recipe?.strMeal, "Mock Recipe 1", "Loaded recipe title should match")
     }
-    
-    func testDisplayRecipeDetails() async {
-        // Given
-        let recipeID = "52772"
-        let mockService = MockRecipeService()
-        let viewModel = DetailedRecipeViewModel(recipeID: recipeID, recipeService: mockService)
-        let detailedRecipeView = DetailedRecipeView(recipeID: recipeID, viewModel: viewModel)
-        
-        // When
-        await viewModel.loadRecipeDetails()
-        
-        // Then
-        let recipe = viewModel.recipe
-        XCTAssertNotNil(recipe, "Recipe should not be nil after loading.")
-        XCTAssertEqual(recipe?.strMeal, "Chocolate Cake", "The recipe name should be Chocolate Cake.")
-        XCTAssertEqual(recipe?.strCategory, "Dessert", "The category should be Dessert.")
-        XCTAssertEqual(recipe?.strArea, "American", "The area should be American.")
-    }
+         */
 }
-*/

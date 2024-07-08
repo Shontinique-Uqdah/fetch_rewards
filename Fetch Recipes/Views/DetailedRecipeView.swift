@@ -12,6 +12,7 @@ struct DetailedRecipeView: View {
     let recipeID: String
     @State private var recipe: Recipe?
     @State private var errorMessage: String?
+    @EnvironmentObject var recipeService: RecipeService
     
     var body: some View {
         ScrollView {

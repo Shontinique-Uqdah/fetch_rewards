@@ -67,19 +67,17 @@ struct Recipe: Codable, Identifiable {
     }
 }
 
-// Makes the RecipeService Class testable by allowing dependency injection for URLSession
-protocol URLSessionProtocol {
-    func data(from url: URL) async throws -> (Data, URLResponse)
+protocol RecipeServiceProtocol {
+    func fetchRecipes() async throws -> [Recipe]
+    func fetchRecipeDetails(id: String) async throws -> Recipe
 }
 
-extension URLSession: URLSessionProtocol {}
-
-class RecipeService {
+class RecipeService: RecipeServiceProtocol, ObservableObject {
     static let shared = RecipeService()
-    var urlSession: URLSessionProtocol
+    private var session: URLSessionProtocol
 
-    private init(session: URLSessionProtocol = URLSession.shared) {
-        self.urlSession = session
+    init(session: URLSessionProtocol = URLSession.shared) {
+        self.session = session
     }
 
     // Method to retrieve a list of all recipes in the category "Dessert"

@@ -3,7 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var recipes: [Recipe] = []
     @State private var errorMessage: String?
-
+    @EnvironmentObject var recipeService: RecipeService
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
