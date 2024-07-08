@@ -50,3 +50,8 @@ This is a SwiftUI-based recipe app that allows users to browse and explore vario
 ## Expected Output
 
 Upon running the app, you should see a list of recipes with images and titles. Selecting a recipe will navigate to a detailed view displaying the recipe's image, ingredients, and instructions.
+
+![Simulator Screenshot - iPhone 15 Pro - 2024-07-07 at 21 38 55](https://github.com/Shontinique-Uqdah/fetch_rewards/assets/31754126/4ec8cc3c-df4d-4d10-a5ad-de321d3684ba)
+![Simulator Screenshot - iPhone 15 Pro - 2024-07-07 at 21 38 49](https://github.com/Shontinique-Uqdah/fetch_rewards/assets/31754126/253f23eb-a507-4032-be0c-8d40c9071ce6)
+![Simulator Screenshot - iPhone 15 Pro - 2024-07-07 at 21 38 44](https://github.com/Shontinique-Uqdah/fetch_rewards/assets/31754126/a754cf73-f2ca-46f4-a660-f6c062521352)
+
