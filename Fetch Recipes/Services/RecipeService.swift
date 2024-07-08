@@ -67,12 +67,8 @@ struct Recipe: Codable, Identifiable {
     }
 }
 
-protocol RecipeServiceProtocol {
-    func fetchRecipes() async throws -> [Recipe]
-    func fetchRecipeDetails(id: String) async throws -> Recipe
-}
 
-class RecipeService: RecipeServiceProtocol, ObservableObject {
+class RecipeService {
     static let shared = RecipeService()
     private var session: URLSessionProtocol
 

@@ -12,7 +12,6 @@ struct DetailedRecipeView: View {
     let recipeID: String
     @State private var recipe: Recipe?
     @State private var errorMessage: String?
-    @EnvironmentObject var recipeService: RecipeService
     
     var body: some View {
         ScrollView {
@@ -61,7 +60,7 @@ struct DetailedRecipeView: View {
                                 .font(.headline)
                             ForEach(ingredients, id: \.self) { ingredient in
                                 HStack {
-                                    Image(systemName: "checkmark.square")
+                                    Text("•") // Bullet point
                                     Text(ingredient.capitalized)
                                 }
                             }
@@ -85,7 +84,7 @@ struct DetailedRecipeView: View {
                 }
             }
             .padding()
-            //.navigationTitle("Recipe Details")
+            .navigationTitle("Recipe Details")
             .task {
                 await loadRecipeDetails()
             }
